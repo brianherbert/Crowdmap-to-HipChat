@@ -12,11 +12,9 @@ file_put_contents('timestamp', time());
 
 $url = 'https://api.crowdmap.com/v1/posts/?fields=posts.message,media.file_location,media.filename_t&limit=100&after='.$after.'&apikey='.generate_signature('GET','/posts/');
 
-$browser = new Buzz\Browser();
-$headers = array('User-Agent' => 'Crowdmap to HipChat Application v0');
-$response = $browser->get($url,$headers);
+$response = get($url,$headers);
 
-$data = json_decode($browser->getLastResponse()->getContent());
+$data = json_decode($response);
 $data = $data->posts;
 
 // Create the messages that we will post to HipChat
@@ -61,6 +59,22 @@ echo "Finished. Have a nice day!\n";
 function generate_signature($http_method,$url) {
 	$date = time();
 	return 'A' . CM_PUBLIC . hash_hmac('sha1', "{$http_method}\n{$date}\n{$url}\n", CM_PRIVATE);
+}
+
+function get($url) {
+	$ch = curl_init();
+	curl_setopt($ch,CURLOPT_URL,$url);
+	curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,15); // Timeout set to 15 seconds. This is somewhat arbitrary and can be changed.
+	curl_setopt($ch,CURLOPT_RETURNTRANSFER,1); //Set curl to store data in variable instead of print
+	curl_setopt($ch,CURLOPT_HTTPGET,true);
+	curl_setopt($ch,CURLOPT_SSL_VERIFYPEER,false);
+	curl_setopt($ch,CURLOPT_USERAGENT,'Crowdmap to HipChat Application v0');
+	curl_setopt($ch,CURLOPT_FOLLOWLOCATION,true);
+
+	$buffer = curl_exec($ch);
+	curl_close($ch);
+
+	return $buffer;
 }
 
 

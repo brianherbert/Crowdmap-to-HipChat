@@ -14,4 +14,6 @@ Ensure that the "timestamp" file has proper write permissions. This is where a t
 
 Running
 =======
+Simply run index.php from the command line (or the browser, but it's not intended to be used that way).
+
 This script is intended to be run on a cron, at any interval of your choosing. Keep in mind the API call to Crowdmap will only pull the last 100 posts.
