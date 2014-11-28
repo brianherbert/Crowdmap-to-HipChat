@@ -12,7 +12,7 @@ file_put_contents('timestamp', time());
 
 $url = 'https://api.crowdmap.com/v1/posts/?fields=posts.message,media.file_location,media.filename_t&limit=100&after='.$after.'&apikey='.generate_signature('GET','/posts/');
 
-$response = get($url,$headers);
+$response = get($url);
 
 $data = json_decode($response);
 $data = $data->posts;
